@@ -1,0 +1,32 @@
+navigator.mediaDevices.getUserMedia({ audio: true })
+  .then(stream => {
+    const mediaRecorder = new MediaRecorder(stream);
+    const audioChunks = [];
+
+    mediaRecorder.addEventListener("dataavailable", event => {
+      audioChunks.push(event.data);
+    });
+
+    const startRecording = () => {
+      audioChunks.length = 0;
+      mediaRecorder.start();
+    }
+
+    const stopRecording = () => {
+      mediaRecorder.stop();
+    }
+
+    const playRecording = () => {
+      const audioBlob = new Blob(audioChunks);
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
+
+    // Example usage
+    startRecording();
+    // some code to run
+    stopRecording();
+    playRecording();
+  })
+  .catch(console.error);
